@@ -1,0 +1,34 @@
+{
+  "name": "billing-service",
+  "version": "1.0.0",
+  "description": "payment service for Ren.M",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RenDotM/billing-service.git"
+  },
+  "author": "Chris Chung",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RenDotM/billing-service/issues"
+  },
+  "homepage": "https://github.com/RenDotM/billing-service#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "helmet": "^3.21.3",
+    "mongoose": "^5.9.2",
+    "nodemon": "^2.0.2",
+    "pug": "^2.0.4",
+    "request": "^2.88.2",
+    "stripe": "^8.22.0"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0"
+  }
+}
