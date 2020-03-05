@@ -1,0 +1,51 @@
+[
+  {
+    "user_id": "1",
+    "username": "chrissuhchung",
+    "email": "chrissuhchung@gmail.com",
+    "password": "abc123",
+    "userLevel": "user", //admin,user,
+    "secretKey": "something",
+    "publicKey": "something",
+    "tenants": [
+      {
+        "user_id": "2",
+        "username": "FirstGuy",
+        "email": "FirstGuy@gmail.com",
+        "password": "abc123"
+      }
+    ],
+    "billCharging": [
+      {
+        "user_id": "2",
+        "amount": "100",
+        "subscription": "no"
+      }
+    ],
+    "billDue": []
+  },
+  {
+    "user_id": "1",
+    "username": "chrissuhchung",
+    "email": "chrissuhchung@gmail.com",
+    "password": "abc123",
+    "userLevel": "user", //admin,user,
+    "secretKey": "something",
+    "publicKey": "something",
+    "tenants": [
+      {
+        "user_id": "2",
+        "username": "FirstGuy",
+        "email": "FirstGuy@gmail.com",
+        "password": "abc123"
+      }
+    ],
+    "billCharging": [],
+    "billDue": [
+      {
+        "user_id": "1",
+        "amount": "100"
+      }
+    ]
+  }
+]
