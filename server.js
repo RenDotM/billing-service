@@ -11,6 +11,7 @@ const fs = require("fs");
 const stripe = require("stripe")(stripeSecretKey);
 const cors = require("cors");
 const { Payment } = require("./models/Payment");
+const bodyParser = require("body-parser");
 
 app.set("view engine", "ejs");
 // app.use(express.json());
@@ -23,6 +24,63 @@ app.use(
     credentials: true
   })
 );
+app.use(bodyParser.json());
+
+app.get("/", (req, res) => {
+  // Display landing page.
+  const path = resolve("./index.html");
+  res.sendFile(path);
+});
+
+app.get("/connect/oauth", async (req, res) => {
+  const { code, state } = req.query;
+
+  // Assert the state matches the state you provided in the OAuth link (optional).
+  if (!stateMatches(state)) {
+    return res
+      .status(403)
+      .json({ error: "Incorrect state parameter: " + state });
+  }
+
+  var error;
+
+  // Send the authorization code to Stripe's API.
+  stripe.oauth
+    .token({
+      grant_type: "authorization_code",
+      code
+    })
+    .then(
+      response => {
+        var connected_account_id = response.stripe_user_id;
+        saveAccountId(connected_account_id);
+
+        // Render some HTML or redirect to a different page.
+        return res.status(200).json({ success: true });
+      },
+      err => {
+        if (err.type === "StripeInvalidGrantError") {
+          return res
+            .status(400)
+            .json({ error: "Invalid authorization code: " + code });
+        } else {
+          return res.status(500).json({ error: "An unknown error occurred." });
+        }
+      }
+    );
+});
+
+const stateMatches = state_parameter => {
+  // Load the same state value that you randomly generated for your OAuth link.
+  const saved_state = "sv_53124";
+
+  return saved_state == state_parameter;
+};
+
+const saveAccountId = id => {
+  // Save the connected account ID from the response to your database.
+  console.log("Connected account ID: " + id);
+};
 
 app.get("/api/", (req, res) => res.send({ version: "1.0" }));
 
@@ -122,6 +180,26 @@ app.post("/payouts", function(req, res) {
   );
 });
 
+app.post("/createAccount", function(req, res) {
+  console.log("createAccount req:" + req);
+  stripe.accounts.create(
+    {
+      type: req.body.type,
+      country: "US",
+      email: req.body.email,
+      requested_capabilities: ["card_payments", "transfers"]
+    },
+    function(err, account) {
+      if (err) {
+        console.log("createAccount failed");
+        res.status(500).end();
+      } else {
+        console.log("createAccount was successful:" + account);
+        res.json(account); //account.id
+      }
+    }
+  );
+});
 function sendtoMongo(payload) {
   mongoose.connect("mongodb://localhost:27017/payment", {
     useNewUrlParser: true
